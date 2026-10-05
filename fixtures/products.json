@@ -1,0 +1,58 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Doce de exemplo 1",
+      "category": "1",
+      "description": "Produto fictício para demonstrar o catálogo.",
+      "price": "5.00",
+      "last_price": "0.00",
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Doce de exemplo 2",
+      "category": "2",
+      "description": "Produto fictício para demonstrar o catálogo.",
+      "price": "6.50",
+      "last_price": "0.00",
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "Doce de exemplo 3",
+      "category": "3",
+      "description": "Produto fictício para demonstrar o catálogo.",
+      "price": "4.00",
+      "last_price": "0.00",
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Doce de exemplo 4",
+      "category": "4",
+      "description": "Produto fictício para demonstrar o catálogo.",
+      "price": "3.50",
+      "last_price": "0.00",
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

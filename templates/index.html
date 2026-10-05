@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Doces da Malu | Doces artesanais{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/style.css' %}">{% endblock %}
+
+{% block content %}
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="content">
+            <a href="{% url 'menu' %}" id="logo">
+                <img src="{% static 'img/brand-mark.svg' %}" alt="">
+                Doces da Malu
+            </a>
+            <div class="items">
+                <a href="#about">Sobre</a>
+                <a href="#menu">Cardápio</a>
+                <a href="#service">Atendimento</a>
+                <a href="{% url 'confectioner_login' %}">Sou confeiteiro(a)</a>
+            </div>
+            <div class="icons">
+                <a href="{% url 'cart' %}" aria-label="Carrinho">
+                    <span class="iconify-inline" data-icon="ph:shopping-bag-open-duotone"></span>
+                    <div class="cartNotify"></div>
+                </a>
+                {% if whatsapp_number %}
+                <a href="https://wa.me/{{ whatsapp_number }}" class="whatsapp" aria-label="WhatsApp">
+                    <span class="iconify-inline" data-icon="akar-icons:whatsapp-fill"></span>
+                </a>
+                {% endif %}
+            </div>
+            <div class="btnMobile">
+                <span class="iconify-inline" data-icon="ph:list-bold"></span>
+            </div>
+        </div>
+        <div class="itemsMobile">
+            <a href="#about">Sobre</a>
+            <a href="#menu">Cardápio</a>
+            <a href="#service">Atendimento</a>
+            <a href="{% url 'confectioner_login' %}">Sou confeiteiro(a)</a>
+            <div class="icons">
+                <a href="{% url 'cart' %}" aria-label="Carrinho">
+                    <span class="iconify-inline" data-icon="ph:shopping-bag-open-duotone"></span>
+                    <div class="cartNotify"></div>
+                </a>
+                {% if whatsapp_number %}
+                <a href="https://wa.me/{{ whatsapp_number }}" class="whatsapp" aria-label="WhatsApp">
+                    <span class="iconify-inline" data-icon="akar-icons:whatsapp-fill"></span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- BANNER -->
+    <div class="banner">
+        <span class="deco heart h1">&hearts;</span>
+        <span class="deco heart h2">&hearts;</span>
+        <span class="deco heart h3">&hearts;</span>
+        <span class="deco sparkle s1">&#10022;</span>
+        <span class="deco sparkle s2">&#10022;</span>
+        <div class="bannerContent">
+            <div>
+                <p class="tag">Doces artesanais feitos com amor</p>
+                <h1>Um <span>carinho</span> em cada pedaço.</h1>
+                <p id="subtitle">Docinhos artesanais para adoçar o seu dia. Confira o cardápio, escolha seus favoritos e faça seu pedido!</p>
+                <a href="#menu" class="btn">
+                    <span class="iconify-inline" data-icon="ph:cake-duotone"></span> Ver cardápio
+                </a>
+                <div class="social">
+                    {% if facebook_url %}<a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="iconify" data-icon="brandico:facebook"></span></a>{% endif %}
+                    {% if instagram_url %}<a href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="iconify" data-icon="akar-icons:instagram-fill"></span></a>{% endif %}
+                    {% if whatsapp_number %}<a href="https://wa.me/{{ whatsapp_number }}" aria-label="WhatsApp"><span class="iconify" data-icon="akar-icons:whatsapp-fill"></span></a>{% endif %}
+                </div>
+            </div>
+            <div class="bannerImg">
+                <img src="{% static 'img/product-placeholder.svg' %}" alt="Ilustração genérica de doces">
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="items container">
+        <div class="cardItems">
+            <span class="iconify" data-icon="ph:cookie-duotone"></span>
+            <h4>Escolha os docinhos</h4>
+            <p>Escolha todos os doces que deseja clicando no botão 'Adicionar'.</p>
+        </div>
+        <div class="cardItems">
+            <span class="iconify" data-icon="ph:shopping-bag-open-duotone"></span>
+            <h4>Confira a sacolinha</h4>
+            <p>Verifique se todos os docinhos estão no seu carrinho.</p>
+        </div>
+        <div class="cardItems">
+            <span class="iconify" data-icon="ph:heart-duotone"></span>
+            <h4>Envie o pedido</h4>
+            <p>Depois de conferir, é só enviar o pedido com um simples clique.</p>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="about">
+        <div class="container">
+            <h3>Cardápio online</h3>
+            <p>Boas-vindas ao cardápio online da <span>Doces da Malu</span>!</p>
+            <p>Aqui você escolhe seus doces favoritos de um jeitinho prático e rápido e envia o pedido direto para o nosso WhatsApp. Tudo feito à mão, com ingredientes selecionados e muito carinho.</p>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="menu" class="container">
+        <h3>Cardápio</h3>
+        <div class="linksMenu">
+            <button class="linkMenu active" data-filter="all" type="button">Tudo</button>
+            {% for category in categories %}
+            <button class="linkMenu" data-filter="{{ category.id }}" type="button">{{ category.name }}</button>
+            {% endfor %}
+        </div>
+        <div class="cardsMenu" id="showMenu">
+            {% for product in products %}
+            <div class="card" data-category="{{ product.category_id }}">
+                <div>
+                    <div class="cardImg">
+                        {% if product.image %}<img src="{{ product.image.url }}" alt="Imagem de um(a) {{ product.name }}" loading="lazy">{% else %}<img src="{% static 'img/product-placeholder.svg' %}" alt="Ilustração de demonstração para {{ product.name }}" loading="lazy">{% endif %}
+                    </div>
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.description }}</p>
+                </div>
+                <div>
+                    <p class="price">R$ <span>{{ product.price }}</span></p>
+                    <button class="btn add-to-cart" data-id="{{ product.id }}" type="button">
+                        <span class="iconify-inline" data-icon="ph:heart-fill"></span> Adicionar
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty">Nenhum docinho encontrado por aqui!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- SERVICE -->
+    <div id="service" class="container">
+        <h3>Atendimento</h3>
+        <div class="locAndCont">
+            <div class="cardLAC">
+                <div class="circle"><span class="iconify-inline" data-icon="akar-icons:location"></span></div>
+                <p>Confira as opções de entrega ou retirada ao finalizar o pedido.</p>
+            </div>
+            <div class="cardLAC">
+                <div class="circle"><span class="iconify-inline" data-icon="akar-icons:phone"></span></div>
+                <p>Telefone e WhatsApp<br>{% if whatsapp_number %}<a href="tel:+{{ whatsapp_number }}">+{{ whatsapp_number }}</a>{% else %}Configure no painel administrativo{% endif %}</p>
+            </div>
+        </div>
+        <div class="days">
+            {% for availability in store_availability %}
+            <div class="cardDays"><h5>{{ availability.get_weekday_display|slice:":3" }}</h5><p>{% if availability.is_open %}{{ availability.hours }}{% else %}Fechado{% endif %}</p></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map map-placeholder" role="note">Mapa demonstrativo — nenhum endereço real configurado.</div>
+
+    <!-- FOOTER -->
+    <div class="footerTop">
+        <div class="content">
+            <p id="logo">
+                <img src="{% static 'img/brand-mark.svg' %}" alt="">
+                Doces da Malu
+            </p>
+            <div>
+                <h4>Quem somos</h4>
+                <p>Somos uma doceria artesanal que prepara cada docinho à mão, com ingredientes selecionados e muito carinho, para adoçar o seu dia.</p>
+            </div>
+            <div class="links">
+                <h4>Links úteis</h4>
+                <a href="#about">Sobre nós</a>
+                <a href="#menu">Cardápio</a>
+                <a href="#service">Atendimento</a>
+                <a href="{% url 'cart' %}">Minha sacolinha</a>
+                <a href="{% url 'confectioner_login' %}">Área do confeiteiro</a>
+            </div>
+        </div>
+    </div>
+    <div class="footerBottom">
+        <div class="content">
+            <p>Doces da Malu &copy; Feito com &hearts; Todos os direitos reservados.</p>
+            <div class="social">
+                {% if facebook_url %}<a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="iconify" data-icon="brandico:facebook"></span></a>{% endif %}
+                {% if instagram_url %}<a href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="iconify" data-icon="akar-icons:instagram-fill"></span></a>{% endif %}
+                {% if whatsapp_number %}<a href="https://wa.me/{{ whatsapp_number }}" aria-label="WhatsApp"><span class="iconify" data-icon="akar-icons:whatsapp-fill"></span></a>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    {{ products_json|json_script:"products-data" }}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/menu.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+{% endblock %}

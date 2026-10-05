@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Doces da Malu | Minha sacolinha{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/cart.css' %}">{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="back">
+        <a href="{% url 'menu' %}">
+            <span class="iconify-inline" data-icon="ion:arrow-back-outline"></span>
+            Voltar
+        </a>
+    </div>
+    <img class="mascot" src="{% static 'img/brand-mark.svg' %}" alt="Ícone decorativo de cupcake">
+    <h1>Minha <span>sacolinha</span></h1>
+    <p class="info">Confira seu pedido, escolha como enviar o comprovante e aguarde a confirmação da confeitaria.</p>
+
+    <div id="cartStep">
+        <form id="customerDetails" class="customer-details">
+            <h2>Seus dados</h2>
+            <p>{{ customer_form.customer_name.label_tag }} {{ customer_form.customer_name }}</p>
+            <fieldset id="deliveryAddress" hidden disabled>
+                <legend>Endereço de entrega</legend>
+                <p>{{ customer_form.cep.label_tag }} {{ customer_form.cep }}</p>
+                <p>{{ customer_form.street.label_tag }} {{ customer_form.street }}</p>
+                <p>{{ customer_form.number.label_tag }} {{ customer_form.number }}</p>
+                <p>{{ customer_form.complement.label_tag }} {{ customer_form.complement }}</p>
+                <p>{{ customer_form.neighborhood.label_tag }} {{ customer_form.neighborhood }}</p>
+                <p>{{ customer_form.city.label_tag }} {{ customer_form.city }}</p>
+                <p>{{ customer_form.state.label_tag }} {{ customer_form.state }}</p>
+            </fieldset>
+        </form>
+
+        <div class="row">
+        <div class="items">
+            <h2>Docinhos escolhidos</h2>
+            <hr>
+            <div id="showItems">
+                <p>Sua sacolinha ainda está vazia. Que tal escolher um docinho?</p>
+            </div>
+        </div>
+
+        <div class="total">
+            <h2>Valor final</h2>
+            <hr>
+            <div class="division">
+                <h3>Entrega</h3>
+                <div class="option">
+                    <p>Retirada no local (+ R$ 0,00)</p>
+                    <button id="dontWantDelivery" class="active" type="button"></button>
+                </div>
+                <div class="option">
+                    <p>ENTREGA (+ R$ {{ store_settings.delivery_fee|floatformat:2 }})</p>
+                    <button id="wantDelivery" type="button"></button>
+                </div>
+            </div>
+            <div class="division">
+                <h3>Cupom</h3>
+                <div class="promotionCode">
+                    <input type="text" placeholder="Insira o código aqui" id="promotionCode">
+                    <button id="addPromotionCode" data-validation-url="{% url 'validate_coupon' %}" type="button">+</button>
+                </div>
+                <p id="couponMessage" role="status" aria-live="polite"></p>
+            </div>
+            <div class="division">
+                <h3>Informações</h3>
+                <div class="item">
+                    <p>Valor do pedido:</p>
+                    <span id="showAllItemsValue">Carregando...</span>
+                </div>
+                <div class="item">
+                    <p>Taxa de entrega:</p>
+                    <span id="showDelivery">Carregando...</span>
+                </div>
+                <div class="item">
+                    <p>Desconto (cupom):</p>
+                    <span id="showDiscount">Carregando...</span>
+                </div>
+            </div>
+            <hr>
+            <div class="item">
+                <h3>Total</h3>
+                <span id="showTotal">Carregando...</span>
+            </div>
+            <p id="minimumOrderMessage" role="status" aria-live="polite"></p>
+            {% csrf_token %}
+            <button id="generateOrder" data-validation-url="{% url 'validate_order' %}" type="button">Ir para pagamento</button>
+            <div class="keepBuying">
+                <p>ou</p>
+                <a href="{% url 'menu' %}#menu">Continuar comprando</a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <section id="paymentStep" class="payment-step" hidden aria-labelledby="paymentStepTitle">
+        <div class="payment-card">
+            <button id="backToCart" class="back-to-cart" type="button">Voltar à sacolinha</button>
+            <p class="step-label">Etapa 2 de 2</p>
+            <h2 id="paymentStepTitle" tabindex="-1">Pagamento do pedido</h2>
+            <p class="payment-total">Total do pedido: <strong id="paymentTotal"></strong></p>
+            <img class="payment-demo-image" src="{% static 'img/payment-demo.svg' %}" alt="Ilustração de pagamento para demonstração">
+            <p class="payment-help">Pagamento ilustrativo: não transfira valores nem envie comprovantes reais. Configure seus próprios dados antes de usar em produção.</p>
+            <fieldset class="proof-methods">
+                <legend>Como deseja enviar o comprovante?</legend>
+                <label><input type="radio" name="proofMethod" value="upload" checked> Anexar aqui no site</label>
+                {% if checkout_settings.whatsapp_configured %}
+                <label><input type="radio" name="proofMethod" value="whatsapp"> Enviar pelo WhatsApp</label>
+                {% endif %}
+            </fieldset>
+            <div id="receiptUploadSection">
+                <label for="receiptFile">Comprovante (JPG, PNG ou PDF; até 5 MB)</label>
+                <input id="receiptFile" type="file" accept=".jpg,.jpeg,.png,.pdf">
+            </div>
+            <p id="paymentMessage" role="status" aria-live="polite"></p>
+            <button id="submitOrder" data-submit-url="{% url 'submit_order' %}" type="button" disabled>Enviar pedido e comprovante</button>
+        </div>
+    </section>
+    <section id="orderComplete" class="payment-step" hidden aria-live="polite">
+        <div class="payment-card">
+            <h2 tabindex="-1">Pedido recebido</h2>
+            <p>Número do pedido: <strong id="orderReference"></strong></p>
+            <p id="orderCompleteMessage"></p>
+            <a class="btn" href="{% url 'menu' %}">Voltar ao cardápio</a>
+        </div>
+    </section>
+</div>
+
+{{ products_json|json_script:"products-data" }}
+{{ checkout_settings|json_script:"checkout-settings" }}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

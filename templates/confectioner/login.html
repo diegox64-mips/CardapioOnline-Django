@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Área do confeiteiro | Doces da Malu{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/confectioner.css' %}">{% endblock %}
+{% block content %}
+<main class="work-panel">
+    <h1>Área do confeiteiro</h1>
+    <p>Entre com o usuário criado pelo administrador.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">Entrar</button>
+    </form>
+    <a href="{% url 'menu' %}">Voltar ao cardápio</a>
+</main>
+{% endblock %}

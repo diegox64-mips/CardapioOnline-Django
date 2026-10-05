@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static tz %}
+{% block title %}Pedidos | Doces da Malu{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/confectioner.css' %}">{% endblock %}
+{% block content %}
+<main class="work-panel">
+    <header class="orders-header">
+        <div>
+            <h1>Pedidos da confeitaria</h1>
+            <p>Confira o pedido e o comprovante antes de confirmar o pagamento.</p>
+        </div>
+        <form method="post" action="{% url 'confectioner_logout' %}">
+            {% csrf_token %}
+            <button type="submit">Sair</button>
+        </form>
+    </header>
+
+    <form class="date-filter" method="get">
+        <label for="order-date">Data do pedido</label>
+        <input id="order-date" type="date" name="date" value="{{ selected_date }}">
+        <button type="submit">Filtrar</button>
+        <a href="{% url 'confectioner_orders' %}">Todas as datas</a>
+    </form>
+
+    {% for order in page_obj %}
+        {% ifchanged order.created_at|localtime|date:"Y-m-d" %}
+        <h2 class="orders-date">{{ order.created_at|localtime|date:"d/m/Y" }}</h2>
+        {% endifchanged %}
+        <article class="order-card">
+            <header>
+                <div>
+                    <h3>{{ order.reference }} — {{ order.customer_name }}</h3>
+                    <p>{{ order.created_at|localtime|date:"H:i" }} · {{ order.get_status_display }}</p>
+                </div>
+                <strong class="order-total">R$ {{ order.total|floatformat:2 }}</strong>
+            </header>
+            <p class="proof-method">Comprovante: {{ order.get_proof_method_display }}</p>
+            <ul>
+                {% for item in order.items %}
+                <li>{{ item.quantity }} × {{ item.name }} — R$ {{ item.unit_price }} cada; subtotal R$ {{ item.line_total }}</li>
+                {% endfor %}
+            </ul>
+            {% if order.delivery %}
+                <p><strong>Entrega</strong><br>{{ order.address|linebreaksbr }}</p>
+            {% else %}
+                <p><strong>Retirada no local</strong></p>
+            {% endif %}
+            <p>Produtos: R$ {{ order.subtotal|floatformat:2 }} · Desconto: R$ {{ order.discount|floatformat:2 }}{% if order.coupon %} ({{ order.coupon }}){% endif %} · Entrega: R$ {{ order.delivery_fee|floatformat:2 }}</p>
+            {% if order.receipt %}
+                <a class="receipt-link" href="{% url 'confectioner_receipt' order.pk %}">Baixar comprovante privado</a>
+            {% else %}
+                <p class="pending-proof">O cliente informou que enviará o comprovante pelo WhatsApp.</p>
+            {% endif %}
+            <form class="status-form" method="post" action="{% url 'confectioner_status' order.pk %}">
+                {% csrf_token %}
+                <label for="status-{{ order.pk }}">Situação</label>
+                <select id="status-{{ order.pk }}" name="status">
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Salvar situação</button>
+            </form>
+        </article>
+    {% empty %}
+        <p class="empty-orders">Nenhum pedido encontrado para este período.</p>
+    {% endfor %}
+
+    <nav class="pagination" aria-label="Páginas dos pedidos">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&amp;date={{ selected_date|urlencode }}">Anterior</a>{% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&amp;date={{ selected_date|urlencode }}">Próxima</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}

@@ -1,0 +1,26 @@
+body { background: #FCEAEA; color: #46100F; font-family: "Nunito", sans-serif; }
+.work-panel { max-width: 960px; margin: 32px auto; padding: 24px; }
+.work-panel h1, .work-panel h2, .work-panel h3 { color: #46100F; font-family: "Fredoka", "Nunito", sans-serif; }
+.work-panel input, .work-panel select, .work-panel button { box-sizing: border-box; max-width: 100%; padding: 10px 14px; border: 1px solid #C16287; border-radius: 12px; color: #46100F; font: inherit; }
+.work-panel button { background: #FBDFE2; cursor: pointer; }
+.work-panel button:hover { background: #FBE3E6; }
+.work-panel a { color: #46100F; }
+.work-panel form { margin: 16px 0; }
+.work-panel label { display: block; margin: 8px 0; font-weight: 700; }
+.work-panel .orders-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.work-panel .date-filter, .work-panel .status-form { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.work-panel .date-filter label, .work-panel .status-form label { margin: 0; }
+.work-panel .orders-date { margin: 28px 0 12px; }
+.work-panel .order-card { margin: 16px 0; padding: 22px; border: 1px solid #C16287; border-radius: 20px; background: #FCF2F0; box-shadow: 0 8px 24px rgba(70, 16, 15, .08); overflow-wrap: anywhere; }
+.work-panel .order-card header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.work-panel .order-card header h3, .work-panel .order-card header p { margin: 0 0 6px; }
+.work-panel .order-total { color: #EE2777; font-family: "Fredoka", "Nunito", sans-serif; font-size: 1.35rem; white-space: nowrap; }
+.work-panel .proof-method, .work-panel .pending-proof { color: #C16287; font-weight: 700; }
+.work-panel .receipt-link { display: inline-block; margin: 8px 0; font-weight: 700; }
+.work-panel .pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0; }
+.work-panel .errorlist { color: #9d1b1b; }
+@media (max-width: 700px) {
+  .work-panel { width: 92%; padding: 16px 0; }
+  .work-panel .orders-header { align-items: flex-start; flex-direction: column; }
+  .work-panel .order-card header { flex-direction: column; gap: 8px; }
+}
